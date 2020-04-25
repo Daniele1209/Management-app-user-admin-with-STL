@@ -1,5 +1,8 @@
 #pragma once
+#include <vector>
 #include <iostream>
+#include <string>
+
 #define _CRT_SECURE_NO_WARNINGS
 
 class Turret {
@@ -32,6 +35,10 @@ public:
 	}
 
 	bool operator==(const Turret& t);
+
+	friend std::vector<std::string> tokenize(const std::string str, char delimiter);
+	friend std::istream& operator>>(std::istream& is, Turret& instance);
+	friend std::ostream& operator<<(std::ostream& os, const Turret& instance);
 
 	std::string message();
 };

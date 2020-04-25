@@ -2,15 +2,28 @@
 #include <string>
 #include <iostream>
 #include <string>
+#include <sstream>
 using namespace std;
 
 void UI::menu() {
+	cout << "ADMIN COMMANDS :\n\n";
 	cout << "add - to add a turret\n";
 	cout << "delete - to delete a turret\n";
 	cout << "update - to change the turret\n";
 	cout << "list - to print all the turrets\n";
 	cout << "exit - to exit the app\n";
 	cout << "mode - to change the mode (admin or user)\n";
+	cout << "fileLocation + path - to set the path where the values are going to be stored\n\n";
+	cout << "USER COMMANDS :\n\n";
+	cout << "next - to get the next item in the list\n";
+	cout << "mylist - to see the list that you saved\n";
+	cout << "list + size + parts - to get the items sorted by parts\n";
+	cout << "save + location - to save the item in a diffrent list\n\n\n";
+}
+
+//UI for storing and files
+void UI::path(string str) {
+	service.new_path(str);
 }
 
 //UI for WATCHMAN user
@@ -163,6 +176,9 @@ void UI::ui_console() {
 
 			strcpy(cmd_aux, cmd);
 			command = strtok(cmd_aux, " ");
+			int sz = strlen(cmd);
+			string cmmd;
+			cmmd.assign(cmd, sz);	
 
 			if (strcmp(command, "add") == 0) {
 				add_turret(cmd);
@@ -175,6 +191,9 @@ void UI::ui_console() {
 			}
 			else if (strcmp(command, "list") == 0) {
 				list_turrets();
+			}
+			else if (strcmp(command, "fileLocation") == 0) {
+				path(cmmd);
 			}
 			else if (strcmp(command, "mode") == 0) {
 				command = strtok(0, " ");

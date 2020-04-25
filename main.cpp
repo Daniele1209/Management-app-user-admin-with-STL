@@ -4,8 +4,8 @@
 
 int main()
 {
-	//Tests::testAll();
-	//run_all_tests();
+
+	run_all_tests();
 	Repository repo{};
 	Repository list{};
 	Watchman watch{ repo, list };

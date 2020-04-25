@@ -10,6 +10,7 @@ public:
 	Repository& get_repo() const {
 		return repo;
 	}
+	void new_path(std::string path);
 	int add_turret_repo(const std::string& location, const std::string& size, const int aura_level, const int parts, const std::string& vision);
 	Turret get_turret(int pos);
 	int get_repo_size();

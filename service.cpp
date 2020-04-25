@@ -9,6 +9,10 @@ int Service::add_turret_repo(const std::string& location, const std::string& siz
 
 }
 
+void Service::new_path(std::string set_path) {
+	this->repo.path_set(set_path);
+}
+
 int Service::delete_turret_list(std::string command) {
 	return this->repo.delete_turret(command);
 }

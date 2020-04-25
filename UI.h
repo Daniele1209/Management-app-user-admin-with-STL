@@ -2,6 +2,7 @@
 #include "turret.h"
 #include "service.h"
 #include "watchman.h"
+#include <vector>
 #define _CRT_SECURE_NO_WARNINGS
 
 class UI {
@@ -17,6 +18,7 @@ public:
 
 private:
 	static void menu();
+	void path(std::string str);
 	void add_turret(std::string command);
 	void list_turrets();
 	void delete_turret(std::string command);

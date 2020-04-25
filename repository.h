@@ -6,11 +6,13 @@
 class Repository {
 private:
 	Dynamic_vector<Turret> turrets;
+	std::string file_path;
 
 public:
 	//initialise the repo
-	Repository() {}
+	Repository() : file_path{"file.txt"} {}
 
+	void path_set(std::string path_of_file);
 	int get_the_size();
 	int add_turret(const Turret& tur);
 	Turret find_turret_location(int location);

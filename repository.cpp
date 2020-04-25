@@ -1,6 +1,9 @@
 #include "repository.h"
 #include "turret.h"
 #include <string>
+#include <Windows.h>
+#include <fstream>
+
 using namespace std;
 
 int Repository::add_turret(const Turret& tur) {
@@ -48,3 +51,10 @@ int Repository::update_turret(const Turret tur, std::string str) {
 Dynamic_vector<Turret> Repository::get_turrets() {
 	return this->turrets;
 }
+
+//for files
+
+void Repository::path_set(std::string path_of_file) {
+	this->file_path = path_of_file;
+}
+
