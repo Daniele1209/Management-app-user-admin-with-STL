@@ -35,10 +35,10 @@ public:
 	}
 
 	bool operator==(const Turret& t);
-
 	friend std::vector<std::string> tokenize(const std::string str, char delimiter);
 	friend std::istream& operator>>(std::istream& is, Turret& instance);
-	friend std::ostream& operator<<(std::ostream& os, const Turret& instance);
+	friend std::ostream& operator<<(std::ostream& os, Turret& instance);
 
 	std::string message();
+	std::string text() const;
 };

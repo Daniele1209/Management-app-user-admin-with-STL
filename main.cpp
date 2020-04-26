@@ -5,9 +5,9 @@
 int main()
 {
 
-	run_all_tests();
+	//run_all_tests();
 	Repository repo{};
-	Repository list{};
+	std::vector<Turret> list{};
 	Watchman watch{ repo, list };
 	Service service{ repo };
 	UI ui{ service , watch};

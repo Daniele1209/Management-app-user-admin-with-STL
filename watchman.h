@@ -5,16 +5,15 @@
 class Watchman {
 private:
 	Repository& repo;
-	Repository& mylist;
+	std::vector<Turret> mylist;
 	int index = 0;
 
 public:
 
-	Watchman(Repository& r, Repository& l): repo{ r }, mylist{ l } {}
+	Watchman(Repository& r, std::vector<Turret> l): repo{ r }, mylist{ l } {}
 
 	Turret next();
-	Turret current_turret();
-	std::string turret_list(std::string elements);
+	std::vector<Turret>& turret_list(std::string size, int parts);
 	void add_turret_mylist(std::string elements);
-	Dynamic_vector<Turret> get_turret_list();
+	std::vector<Turret>& get_turret_list();
 };

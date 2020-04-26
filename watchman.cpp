@@ -1,66 +1,50 @@
 #include "watchman.h"
+#include <vector>
+#include <iostream>
+#include <string>
+using namespace std;
 
 Turret Watchman::next() {
-	++index;
-	if (index == repo.get_the_size())
-		index = 0;
-	if (repo.get_the_size() > index)
-		return repo.find_turret_location(index);
-}
-
-Turret Watchman::current_turret() {
-	if (repo.get_the_size() > index)
-		return repo.find_turret_location(index);
+	vector<Turret> list = repo.get_turrets();
+	if (list.size() == 0) {
+		throw exception();
+	}
+	Turret& tur = list[index];
+	this->index++;
+	return tur;
 }
 
 void Watchman::add_turret_mylist(std::string elements) {
 	Turret turret = repo.find_turret(elements);
-	mylist.add_turret(turret);
+
+	vector<Turret> list = repo.get_turrets();
+	if (repo.vector_search(this->mylist, turret))
+		throw exception();
+	if (!repo.vector_search(list, turret))
+		throw exception();
+
+	for (auto it : list) {
+		if (it == turret) {
+			this->mylist.push_back(it);
+			break;
+		}
+	}
 }
 
-std::string Watchman::turret_list(std::string elements) {
-	std::string str;
-	std::string str_to_components[2];
+vector<Turret>& Watchman::turret_list(string size, int parts) {
+	vector<Turret> list = repo.get_turrets();
 
-	int j = 0;
-	for (unsigned int i = 0; i < elements.length(); ++i) {
-		if (elements[i] == ',')
-			j++;
-		else if (elements[i] == ' ' and i == 0)
-			continue;
-		else if (elements[i] == ' ' and elements[i - 1] == ' ')
-			continue;
-		else if (elements[i] == ' ' and elements[i - 1] == ',')
-			continue;
-		else str_to_components[j] += elements[i];
-	}
+	this->mylist = vector<Turret>(list.size());
 
-	int parts;
-	std::string size = "";
+	auto it = copy_if(list.begin(), list.end(), mylist.begin(), [parts, size](Turret& t) {
+		return (t.get_parts() <= parts);
+		});
+	this->mylist.resize(distance(this->mylist.begin(), it));
 
-	if (j == 0) {
-		parts = std::stoi(str_to_components[1]);
-	}
-	else if (j == 1) {
-		size = str_to_components[0];
-		parts = std::stoi(str_to_components[1]);
-	}
-
-
-	for (int i = 0; i < repo.get_the_size(); ++i) {
-		if (repo.find_turret_location(i).get_parts() < parts)
-			if (size != "") {
-				if (repo.find_turret_location(i).get_size() == size)
-					str += repo.find_turret_location(i).message() + "\n";
-			}
-			else str += repo.find_turret_location(i).message() + "\n";
-	}
-
-	return str;
-
+	return this->mylist;
 }
 
-Dynamic_vector<Turret> Watchman::get_turret_list() {
-	return this->mylist.get_turrets();
-
+std::vector<Turret>& Watchman::get_turret_list() {
+	return this->mylist;
 }
+

@@ -3,53 +3,114 @@
 #include <string>
 #include <Windows.h>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
-int Repository::add_turret(const Turret& tur) {
-	if (this->turrets.find_element(tur.get_location()) >= 0)
-		return -1;
-	this->turrets.add(tur);
-	return 0;
+int Repository::add_turret(Turret tur) {
+	vector<Turret> turrets;
+	Turret current{};
+	ifstream input(this->file_path);
+	while (input >> current) {
+		turrets.push_back(current);
+	}
+	input.close();
+	if (vector_search(turrets, tur))
+		return 0;
+
+	ofstream output(this->file_path, ios::app);
+	output << tur;
+	output.close();
+	return 1;
 }
 
-Turret Repository::find_turret_location(int location) {
-	return this->turrets.get(location);
+bool Repository::vector_search(vector<Turret> turrets, Turret tur) {
+	for (auto it : turrets) {
+		if (it == tur)
+			return true;
+	}
+	return false;
+}
+
+void Repository::delete_all() {
+	ofstream os;
+	os.open(this->file_path, ofstream::out | ofstream::trunc);
+	os.close();
 }
 
 int Repository::get_the_size() {
-	return turrets.get_size();
-}
+	vector<Turret> turrets;
+	Turret current;
+	ifstream input(this->file_path);
 
-Turret Repository::get_all_turrets(int pos) {
-	return turrets[pos];
+	while (input >> current) {
+		turrets.push_back(current);
+	}
 
+	input.close();
+
+	return turrets.size();
 }
 
 Turret Repository::find_turret(std::string location) {
-	return turrets.find(location);
+	vector<Turret> turrets;
+	Turret current;
+	ifstream input(this->file_path);
+
+	while (input >> current) {
+		turrets.push_back(current);
+		if (current.get_location() == location)
+			return current;
+	}
+
+	input.close();
+
+
 }
 
-int Repository::delete_turret(std::string location) {
-	int index = turrets.find_element(location);
-	if (index != -1)
-		return turrets.delete_item(index);
-	else {
+int Repository::delete_turret(Turret tur) {
+	vector<Turret> turrets;
+	Turret current{};
+
+	ifstream input(this->file_path);
+	while (input >> current) {
+		turrets.push_back(current);
+	}
+	input.close();
+
+	auto it = turrets.begin();
+	while (it != turrets.end()) {
+		if (*it == tur) 
+			break;
+		it++;
+	}
+
+	if (it == turrets.end())
 		return -2;
+	else (turrets.erase(it));
+
+	ofstream output(this->file_path);
+	for (auto it : turrets) {
+		output << it;
 	}
+	output.close();
+
+	return 1;
+
 }
 
-int Repository::update_turret(const Turret tur, std::string str) {
-	if (this->delete_turret(str) != -2) {
-		this->turrets.add(tur);
-		return 1;
-	}
-	else
-		return 0;
-}
+vector<Turret> Repository::get_turrets() {
+	vector<Turret> turrets;
+	Turret current;
+	ifstream input(this->file_path);
 
-Dynamic_vector<Turret> Repository::get_turrets() {
-	return this->turrets;
+	while (input >> current) {
+		turrets.push_back(current);
+	}
+
+	input.close();
+
+	return turrets;
 }
 
 //for files

@@ -23,26 +23,23 @@ void UI::menu() {
 
 //UI for storing and files
 void UI::path(string str) {
+	str.erase(0, 13);
 	service.new_path(str);
 }
 
 //UI for WATCHMAN user
 void UI::next_turret() {
-	if (service.get_repo_size() != 0) {
-		watcher.next();
-		list_turret(watcher.current_turret());
+	try {
+		Turret t = watcher.next();
+		cout << t.message();
 	}
-	else
-		cout << "The main list is empty !\n";
+	catch (exception()) {
+		cout << "List is empty !\n";
+	}
 }
 
 void UI::list_mylist() {
-	Dynamic_vector<Turret> turret = this->watcher.get_turret_list();
-	for (int i = 0; i < turret.get_size(); i++)
-	{
-		Turret t = turret.get(i);
-		cout << t.message() << "\n";
-	}
+	//watcher.get_turret_list();
 }
 
 void UI::save_mylist(std::string command) {
@@ -54,8 +51,25 @@ void UI::save_mylist(std::string command) {
 }
 
 void UI::sort_list(std::string command) {
+	vector<string> strr;
 	command.erase(0, 4);
-	cout << watcher.turret_list(command);
+	std::string str_to_components[2];
+	int j = 0;
+	for (unsigned int i = 0; i < command.length(); ++i) {
+		if (command[i] == ',')
+			j++;
+		else if (command[i] == ' ' and i == 0)
+			continue;
+		else if (command[i] == ' ' and command[i - 1] == ' ')
+			continue;
+		else if (command[i] == ' ' and command[i - 1] == ',')
+			continue;
+		else str_to_components[j] += command[i];
+	}
+	vector<Turret> list = watcher.turret_list(str_to_components[0], stoi(str_to_components[1]));
+
+	for (auto it = list.begin(); it != list.end(); it++)
+		cout << (*it).message();
 }
 
 void UI::list_turret(Turret t) {
@@ -101,16 +115,16 @@ void UI::add_turret(std::string command) {
 		vision = str_to_components[4];
 	}
 	if (ok) {
-		if (this->service.add_turret_repo(location, size, aura_level, parts, vision))
+		if (this->service.add_turret_repo(location, size, aura_level, parts, vision)==0)
 			cout << "Turret already exists !\n";
 	}
 	else
 		cout << "Invalid turret !\n";
 }
 void UI::list_turrets() {
-	for (int i = 0; i < this->service.get_repo_size(); i++) {
-		Turret t = this->service.get_turret(i);
-		cout << t.message() << "\n";
+	vector<Turret> turrets = this->service.get_turret();
+	for (auto it = turrets.begin(); it != turrets.end(); it++) {
+		cout << (*it).text();
 	}
 }
 void UI::delete_turret(std::string command) {
