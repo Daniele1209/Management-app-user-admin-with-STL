@@ -33,7 +33,7 @@ void UI::next_turret() {
 		Turret t = watcher.next();
 		cout << t.message()<<"\n";
 	}
-	catch (exception()) {
+	catch (exception&) {
 		cout << "List is empty !\n";
 	}
 }

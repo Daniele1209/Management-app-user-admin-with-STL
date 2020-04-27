@@ -1,0 +1,10 @@
+east,medium,200,400,lake
+west,meh,150,100,tower
+south,hudge,500,1000,castle
+north,small,150,200,garrison
+north-east,small,125,200,market
+south-west,medium,250,400,residential area
+south-east,large,350,700,forest
+north-west,medium,130,260,mountains
+center,hudge,600,1300,front gate
+levitating,large,400,890,stables
