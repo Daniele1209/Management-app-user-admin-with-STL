@@ -31,7 +31,7 @@ void UI::path(string str) {
 void UI::next_turret() {
 	try {
 		Turret t = watcher.next();
-		cout << t.message();
+		cout << t.message()<<"\n";
 	}
 	catch (exception()) {
 		cout << "List is empty !\n";
@@ -39,7 +39,9 @@ void UI::next_turret() {
 }
 
 void UI::list_mylist() {
-	//watcher.get_turret_list();
+	vector<Turret> t = watcher.get_turret_list();
+	for (auto it = t.begin(); it != t.end(); it++)
+		cout << (*it).message() << "\n";
 }
 
 void UI::save_mylist(std::string command) {

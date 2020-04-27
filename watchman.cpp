@@ -9,6 +9,9 @@ Turret Watchman::next() {
 	if (list.size() == 0) {
 		throw exception();
 	}
+	if (this->index == list.size()) {
+		this->index = 0;
+	}
 	Turret& tur = list[index];
 	this->index++;
 	return tur;
