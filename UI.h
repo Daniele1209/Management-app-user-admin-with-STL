@@ -3,6 +3,8 @@
 #include "service.h"
 #include "watchman.h"
 #include <vector>
+#include "file_handle.h"
+#include "custom_exceptions.h"
 #define _CRT_SECURE_NO_WARNINGS
 
 class UI {
@@ -18,7 +20,10 @@ public:
 
 private:
 	static void menu();
+
+	std::vector<std::string> split_string(std::string str, const std::string c);
 	void path(std::string str);
+	void path_mylist(std::string str);
 	void add_turret(std::string command);
 	void list_turrets();
 	void delete_turret(std::string command);

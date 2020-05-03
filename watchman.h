@@ -1,16 +1,17 @@
 #pragma once
 #include "repository.h"
 #include "turret.h"
+#include "file_handle.h"
 
 class Watchman {
 private:
 	Repository& repo;
-	std::vector<Turret> mylist;
+	watchman_repo& mylist;
 	int index = 0;
 
 public:
 
-	Watchman(Repository& r, std::vector<Turret> l): repo{ r }, mylist{ l } {}
+	Watchman(Repository& r, watchman_repo& l): repo{ r }, mylist{ l } {}
 
 	Turret next();
 	std::vector<Turret>& turret_list(std::string size, int parts);

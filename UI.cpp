@@ -27,6 +27,24 @@ void UI::path(string str) {
 	service.new_path(str);
 }
 
+//path for mylist
+void UI::path_mylist(string str) {
+	string aux_str = str;
+	str.erase(0, 15);
+	service.new_path(str);
+	vector<string> tokens = split_string(str, ".");
+	string ending = tokens[tokens.size() - 1];
+	if (ending == "html") {
+		watchman_repo = new watchman_HTML(aux_str);
+	}
+	else if (ending == "csv") {
+		watchman_repo = new watchman_CSV(aux_str);
+	}
+	else {
+		throw service_exception
+	}
+}
+
 //UI for WATCHMAN user
 void UI::next_turret() {
 	try {
@@ -178,6 +196,19 @@ void UI::update_turret(std::string command) {
 		cout << "Invalid turret !\n";
 }
 
+vector<string> UI::split_string(string str, const string c) {
+	vector<string> tokens;
+	size_t s = str.find(c);
+	while (s != string::npos) {
+		tokens.push_back(str.substr(0, s));
+		str = str.substr(s + 1);
+		s = str.find(c);
+	}
+	tokens.push_back(str);
+
+	return tokens;
+}
+
 void UI::ui_console() {
 	menu();
 	int ok = 1;
@@ -237,6 +268,9 @@ void UI::ui_console() {
 
 			strcpy(cmd_aux, cmd);
 			command = strtok(cmd_aux, " ");
+			int sz = strlen(cmd);
+			string cmmd;
+			cmmd.assign(cmd, sz);
 
 			if (strcmp(command, "mode") == 0) {
 				command = strtok(0, " ");
@@ -264,6 +298,9 @@ void UI::ui_console() {
 					sort_list(cmd);
 				else
 					cout << "Not a valid command !\n";
+			}
+			else if (strcmp(command, "mylistLocation") == 0) {
+				path_mylist(cmmd);
 			}
 			else if (strcmp(command, "exit") == 0) {
 				ok = 0;
