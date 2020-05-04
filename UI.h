@@ -12,6 +12,7 @@ class UI {
 private:
 	Service service;
 	Watchman watcher;
+	watchman_repo* watchman_repo;
 
 public:
 	UI(Service& s, Watchman& w) : service{s}, watcher{ w } {}

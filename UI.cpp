@@ -41,7 +41,7 @@ void UI::path_mylist(string str) {
 		watchman_repo = new watchman_CSV(aux_str);
 	}
 	else {
-		throw service_exception
+		throw service_exception("Not a valid format, try again !\n");
 	}
 }
 

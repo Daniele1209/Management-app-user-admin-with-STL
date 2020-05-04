@@ -5,16 +5,11 @@
 using namespace std;
 
 Turret Watchman::next() {
-	vector<Turret> list = repo.get_turrets();
-	if (list.size() == 0) {
-		throw exception();
-	}
-	if (this->index == list.size()) {
-		this->index = 0;
-	}
-	Turret& tur = list[index];
-	this->index++;
-	return tur;
+	index++;
+	if (index == repo.get_the_size())
+		index = 0;
+	if (repo.get_the_size() > index)
+		return repo.turret_at_pos();
 }
 
 void Watchman::add_turret_mylist(std::string elements) {
@@ -47,7 +42,7 @@ vector<Turret>& Watchman::turret_list(string size, int parts) {
 	return this->mylist;
 }
 
-std::vector<Turret>& Watchman::get_turret_list() {
+vector<Turret>& Watchman::get_turret_list() {
 	return this->mylist;
 }
 
