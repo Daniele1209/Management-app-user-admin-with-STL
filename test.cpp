@@ -1,17 +1,15 @@
 #include "test.h"
+#include "custom_exceptions.h"
 
 void run_service_tests() {
 	Repository repo{};
 	Service service{ repo };
 	service.new_path("file.txt");
-	service.add_turret_repo("east", "huge", 400, 4000, "tower");
-	service.add_turret_repo("west", "medium", 250, 3400, "tower");
-	service.add_turret_repo("north", "small", 120, 1000, "mountains");
-	service.add_turret_repo("south", "medium", 230, 2700, "tower");
-	assert(service.get_repo_size() == 4);
-	service.delete_turret_list("east");
-	assert(service.get_repo_size() == 3);
-	service.update_list("west", "mid", 0, 0, "tower");
+	service.add_turret_repo("loc1", "size", 100, 400, "loc");
+	assert(service.get_repo_size() == 10);
+	service.update_list("loc1", "mid", 0, 0, "tower");
+	service.delete_turret_list("loc1");
+	assert(service.get_repo_size() == 9);
 	std::cout << "service tests passes !\n";
 }
 
@@ -19,13 +17,20 @@ void run_repo_services() {
 	Repository repo{};
 	Service service{ repo };
 	Turret tur{ "south", "medium", 230, 2700, "tower" };
-	Turret tur2{ "east", "huge", 400, 4000, "tower" };
-	repo.add_turret(tur);
-	assert(repo.get_the_size() == 1);
+	Turret tur2{ "loc1", "zise", 400, 4000, "loc" };
+	try {
+		repo.add_turret(tur);
+		assert(false);
+	}
+	catch (exception& ex) {
+		assert(true);
+	}
 	repo.add_turret(tur2);
-	assert(repo.get_the_size() == 2);
-	Turret tur3 = repo.get_turrets()[1];
+	assert(repo.get_the_size() == 10);
+	Turret tur3 = repo.get_turrets()[9];
 	assert(tur2 == tur3);
+	repo.delete_turret(tur2);
+	assert(repo.get_the_size() == 9);
 	std::cout << "repo tests passes !\n";
 }
 
@@ -46,17 +51,16 @@ void run_turret_test() {
 
 void run_watchman_test() {
 	Repository repo{};
-	watchman_HTML list{};
+	watchman_CSV list{ "Mylist.csv" };
 	Watchman watchman{ repo, list };
 	Service service{ repo };
-	service.add_turret_repo("east", "huge", 400, 4000, "tower");
-	Turret tur2{ "east", "huge", 400, 4000, "tower" };
+	Turret tur{ "east", "hudge", 400, 4000, "tower" };
+	Turret tur2{ "south-west", "medium", 250, 400, "residential area" };
 	Turret tur3 = watchman.next();
 	assert(tur2 == tur3);
 	watchman.add_turret_mylist("east");
-	std::vector<Turret> t_list = watchman.turret_list("medium", 4000);
-	std::vector<Turret> tt_list = watchman.get_turret_list();
-	assert(tt_list.size() == 1);
+	vector<Turret> turr = watchman.get_turret_list();
+	assert(tur == turr[0]);
 	std::cout << "watchman tests passes !\n\n";
 }
 
