@@ -14,7 +14,7 @@ public:
 	Watchman(Repository& r, watchman_repo& l): repo{ r }, mylist{ l } {}
 
 	Turret next();
-	std::vector<Turret>& turret_list(std::string size, int parts);
+	std::vector<Turret> turret_list(std::string size, int parts);
 	void add_turret_mylist(std::string elements);
-	std::vector<Turret>& get_turret_list();
+	std::vector<Turret> get_turret_list();
 };

@@ -6,20 +6,20 @@
 
 class Repository {
 private:
-	Dynamic_vector<Turret> turrets;
 	std::string file_path;
 
 public:
 	//initialise the repo
-	Repository() : file_path{"file.txt"} {}
+	Repository() : file_path{ "file.txt" } {}
 	//fct for files
+	std::vector<Turret> load_elements();
+	void save_elements(std::vector<Turret> turrets);
+	Turret turret_at_pos(int pos);
 	void path_set(std::string path_of_file);
-	bool vector_search(std::vector<Turret>, Turret);
 
 	int get_the_size();
-	int add_turret(Turret tur);
+	void add_turret(Turret tur);
 	std::vector<Turret> get_turrets();
 	Turret find_turret(std::string location);
-	int delete_turret(Turret tur);
-	void delete_all();
+	void delete_turret(Turret tur);
 };

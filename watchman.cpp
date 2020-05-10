@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include "custom_exceptions.h"
 using namespace std;
 
 Turret Watchman::next() {
@@ -9,40 +10,34 @@ Turret Watchman::next() {
 	if (index == repo.get_the_size())
 		index = 0;
 	if (repo.get_the_size() > index)
-		return repo.turret_at_pos();
+		return repo.turret_at_pos(index);
 }
 
-void Watchman::add_turret_mylist(std::string elements) {
-	Turret turret = repo.find_turret(elements);
+void Watchman::add_turret_mylist(string elements) {
+	Turret turr = repo.find_turret(elements);
 
-	vector<Turret> list = repo.get_turrets();
-	if (repo.vector_search(this->mylist, turret))
-		throw exception();
-	if (!repo.vector_search(list, turret))
-		throw exception();
+	mylist.add_to_mylist(turr);
+}
 
-	for (auto it : list) {
-		if (it == turret) {
-			this->mylist.push_back(it);
-			break;
-		}
+vector<Turret> Watchman::turret_list(string size, int parts) {
+	index = 0;
+	vector<Turret> turrets = repo.get_turrets();
+	vector<Turret> list;
+	for (auto turr : turrets) {
+		if(turr.get_parts() < parts)
+			if (turr.get_size() == size) {
+				list[index] = turr;
+				index++;
+			}
+	}
+	if (index == 0)
+		throw service_exception("No such items were found !\n");
+	else {
+		return list;
 	}
 }
 
-vector<Turret>& Watchman::turret_list(string size, int parts) {
-	vector<Turret> list = repo.get_turrets();
-
-	this->mylist = vector<Turret>(list.size());
-
-	auto it = copy_if(list.begin(), list.end(), mylist.begin(), [parts, size](Turret& t) {
-		return (t.get_parts() <= parts);
-		});
-	this->mylist.resize(distance(this->mylist.begin(), it));
-
-	return this->mylist;
-}
-
-vector<Turret>& Watchman::get_turret_list() {
-	return this->mylist;
+vector<Turret> Watchman::get_turret_list() {
+	return this->mylist.get_all();
 }
 

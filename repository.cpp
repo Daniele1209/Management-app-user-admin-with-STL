@@ -4,111 +4,55 @@
 #include <Windows.h>
 #include <fstream>
 #include <vector>
+#include "custom_exceptions.h"
 
 using namespace std;
 
-int Repository::add_turret(Turret tur) {
+void Repository::add_turret(Turret tur) {
 	vector<Turret> turrets;
-	Turret current{};
-	ifstream input(this->file_path);
-	while (input >> current) {
-		turrets.push_back(current);
+	turrets = get_turrets();
+	for (auto turr : turrets) {
+		if (turr.get_location() == tur.get_location())
+			throw repo_exception("Turret already exists !\n");
 	}
-	input.close();
-	if (vector_search(turrets, tur))
-		return 0;
+	turrets.push_back(tur);
+	save_elements(turrets);
 
-	ofstream output(this->file_path, ios::app);
-	output << tur;
-	output.close();
-	return 1;
 }
 
-bool Repository::vector_search(vector<Turret> turrets, Turret tur) {
-	for (auto it : turrets) {
-		if (it == tur)
-			return true;
-	}
-	return false;
-}
-
-void Repository::delete_all() {
-	ofstream os;
-	os.open(this->file_path, ofstream::out | ofstream::trunc);
-	os.close();
-}
 
 int Repository::get_the_size() {
 	vector<Turret> turrets;
-	Turret current;
-	ifstream input(this->file_path);
-
-	while (input >> current) {
-		turrets.push_back(current);
-	}
-
-	input.close();
+	turrets = load_elements();
 
 	return turrets.size();
 }
 
-Turret Repository::find_turret(std::string location) {
+Turret Repository::find_turret(string location) {
 	vector<Turret> turrets;
-	Turret current;
-	ifstream input(this->file_path);
-
-	while (input >> current) {
-		turrets.push_back(current);
-		if (current.get_location() == location)
-			return current;
-	}
-
-	input.close();
-
-
+	turrets = load_elements();
+	for (auto turr : turrets)
+		if (turr.get_location() == location)
+			return turr;
+	throw repo_exception("No turret found !\n");
 }
 
-int Repository::delete_turret(Turret tur) {
-	vector<Turret> turrets;
-	Turret current{};
-
-	ifstream input(this->file_path);
-	while (input >> current) {
-		turrets.push_back(current);
+void Repository::delete_turret(Turret tur) {
+	if (this->file_path == "") {
+		throw repo_exception("File location not provided !\n");
 	}
-	input.close();
-
-	auto it = turrets.begin();
-	while (it != turrets.end()) {
-		if (*it == tur) 
-			break;
-		it++;
+	vector<Turret> turrets = get_turrets();
+	auto it = find_if(turrets.begin(), turrets.end(), [&tur](auto& turr) {return turr.get_location() == tur.get_location(); });
+	if (it == turrets.end()) {
+		throw repo_exception("No such turret found !\n");
 	}
-
-	if (it == turrets.end())
-		return -2;
-	else (turrets.erase(it));
-
-	ofstream output(this->file_path);
-	for (auto it : turrets) {
-		output << it;
-	}
-	output.close();
-
-	return 1;
-
+	turrets.erase(it);
+	save_elements(turrets);
 }
 
 vector<Turret> Repository::get_turrets() {
 	vector<Turret> turrets;
-	Turret current;
-	ifstream input(this->file_path);
-
-	while (input >> current) {
-		turrets.push_back(current);
-	}
-
-	input.close();
+	turrets = load_elements();
 
 	return turrets;
 }
@@ -119,3 +63,36 @@ void Repository::path_set(std::string path_of_file) {
 	this->file_path = path_of_file;
 }
 
+vector<Turret> Repository::load_elements() {
+	if (this->file_path == "") {
+		throw repo_exception("File location not found ! :/\n");
+	}
+	vector<Turret> turrets_list;
+	Turret turr{};
+	ifstream fi(this->file_path);
+	while (fi >> turr) {
+		turrets_list.push_back(turr);
+	}
+	fi.close();
+
+	return turrets_list;
+}
+
+void Repository::save_elements(vector<Turret> turrets) {
+	if (this->file_path == "") {
+		throw repo_exception("No path set to save turrets !\n");
+	}
+	ofstream fo(this->file_path);
+	for (auto turret : turrets) {
+		fo << turret;
+	}
+	fo.close();
+}
+
+Turret Repository::turret_at_pos(int pos) {
+	vector<Turret> elements = load_elements();
+	if (elements.size() <= pos) {
+		throw repo_exception("No such element !\n");
+	}
+	return elements[pos];
+}

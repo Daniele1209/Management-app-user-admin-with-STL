@@ -12,7 +12,6 @@ void run_service_tests() {
 	service.delete_turret_list("east");
 	assert(service.get_repo_size() == 3);
 	service.update_list("west", "mid", 0, 0, "tower");
-	service.delete_turrets();
 	std::cout << "service tests passes !\n";
 }
 
@@ -27,7 +26,6 @@ void run_repo_services() {
 	assert(repo.get_the_size() == 2);
 	Turret tur3 = repo.get_turrets()[1];
 	assert(tur2 == tur3);
-	repo.delete_all();
 	std::cout << "repo tests passes !\n";
 }
 
@@ -48,7 +46,7 @@ void run_turret_test() {
 
 void run_watchman_test() {
 	Repository repo{};
-	std::vector<Turret> list{};
+	watchman_HTML list{};
 	Watchman watchman{ repo, list };
 	Service service{ repo };
 	service.add_turret_repo("east", "huge", 400, 4000, "tower");

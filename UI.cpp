@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include "custom_exceptions.h"
 using namespace std;
 
 void UI::menu() {
@@ -135,8 +136,7 @@ void UI::add_turret(std::string command) {
 		vision = str_to_components[4];
 	}
 	if (ok) {
-		if (this->service.add_turret_repo(location, size, aura_level, parts, vision)==0)
-			cout << "Turret already exists !\n";
+		this->service.add_turret_repo(location, size, aura_level, parts, vision);
 	}
 	else
 		cout << "Invalid turret !\n";
@@ -149,8 +149,7 @@ void UI::list_turrets() {
 }
 void UI::delete_turret(std::string command) {
 	command.erase (0, 7);
-	if (service.delete_turret_list(command)==-2)
-		cout << "Item does not exist !\n";
+	service.delete_turret_list(command);
 }
 void UI::update_turret(std::string command) {
 	command.erase(0, 7);
@@ -189,8 +188,7 @@ void UI::update_turret(std::string command) {
 		vision = str_to_components[4];
 	}
 	if (ok) {
-		if (this->service.update_list(location, size, aura_level, parts, vision)==0)
-			cout << "Turret does not exist !\n";
+		this->service.update_list(location, size, aura_level, parts, vision);
 	}
 	else
 		cout << "Invalid turret !\n";
@@ -215,97 +213,102 @@ void UI::ui_console() {
 	string mode = "A";
 	while (ok)
 	{
-		while (mode == "A" && ok == 1) {
-			char cmd[100], cmd_aux[100], *command;
-			cout << ">>>";
-			cin.getline(cmd, 100);
+		try {
+			while (mode == "A" && ok == 1) {
+				char cmd[100], cmd_aux[100], * command;
+				cout << ">>> ";
+				cin.getline(cmd, 100);
 
 
-			strcpy(cmd_aux, cmd);
-			command = strtok(cmd_aux, " ");
-			int sz = strlen(cmd);
-			string cmmd;
-			cmmd.assign(cmd, sz);	
+				strcpy(cmd_aux, cmd);
+				command = strtok(cmd_aux, " ");
+				int sz = strlen(cmd);
+				string cmmd;
+				cmmd.assign(cmd, sz);
 
-			if (strcmp(command, "add") == 0) {
-				add_turret(cmd);
-			}
-			else if (strcmp(command, "update") == 0) {
-				update_turret(cmd);
-			}
-			else if (strcmp(command, "delete") == 0) {
-				delete_turret(cmd);
-			}
-			else if (strcmp(command, "list") == 0) {
-				list_turrets();
-			}
-			else if (strcmp(command, "fileLocation") == 0) {
-				path(cmmd);
-			}
-			else if (strcmp(command, "mode") == 0) {
-				command = strtok(0, " ");
-				if (strcmp(command, "B") == 0) {
-					mode = "B";
-					cout << "You are now in mode: user\n";
+				if (strcmp(command, "add") == 0) {
+					add_turret(cmd);
 				}
-				else if (strcmp(command, "A") == 0) {
-					cout << "You are now in mode: admin\n";
+				else if (strcmp(command, "update") == 0) {
+					update_turret(cmd);
 				}
-				else
-					cout << "Invalid user type !\n";
+				else if (strcmp(command, "delete") == 0) {
+					delete_turret(cmd);
+				}
+				else if (strcmp(command, "list") == 0) {
+					list_turrets();
+				}
+				else if (strcmp(command, "fileLocation") == 0) {
+					path(cmmd);
+				}
+				else if (strcmp(command, "mode") == 0) {
+					command = strtok(0, " ");
+					if (strcmp(command, "B") == 0) {
+						mode = "B";
+						cout << "You are now in mode: user\n";
+					}
+					else if (strcmp(command, "A") == 0) {
+						cout << "You are now in mode: admin\n";
+					}
+					else
+						cout << "Invalid user type !\n";
+				}
+				else if (strcmp(command, "exit") == 0) {
+					ok = 0;
+				}
+				else printf("Not a valid command !\n");
 			}
-			else if (strcmp(command, "exit") == 0) {
-				ok = 0;
+
+			while (mode == "B" && ok == 1) {
+				char cmd[100], cmd_aux[100], * command;
+				cout << ">>>";
+				cin.getline(cmd, 100);
+
+
+				strcpy(cmd_aux, cmd);
+				command = strtok(cmd_aux, " ");
+				int sz = strlen(cmd);
+				string cmmd;
+				cmmd.assign(cmd, sz);
+
+				if (strcmp(command, "mode") == 0) {
+					command = strtok(0, " ");
+					if (strcmp(command, "A") == 0) {
+						mode = "A";
+						cout << "You are now in mode: administrator\n";
+					}
+					else if (strcmp(command, "B") == 0) {
+						cout << "You are now in mode: user\n";
+					}
+					else
+						cout << "Invalid user type !\n";
+				}
+				else if (strcmp(command, "next") == 0) {
+					next_turret();
+				}
+				else if (strcmp(command, "mylist") == 0) {
+					list_mylist();
+				}
+				else if (strcmp(command, "save") == 0) {
+					save_mylist(cmd);
+				}
+				else if (strcmp(command, "list") == 0) {
+					if (strlen(cmd) != 4)
+						sort_list(cmd);
+					else
+						cout << "Not a valid command !\n";
+				}
+				else if (strcmp(command, "mylistLocation") == 0) {
+					path_mylist(cmmd);
+				}
+				else if (strcmp(command, "exit") == 0) {
+					ok = 0;
+				}
+				else printf("Not a valid command !\n");
 			}
-			else printf("Not a valid command !\n");
 		}
-
-		while (mode == "B" && ok == 1) {
-			char cmd[100], cmd_aux[100], * command;
-			cout << ">>>";
-			cin.getline(cmd, 100);
-
-
-			strcpy(cmd_aux, cmd);
-			command = strtok(cmd_aux, " ");
-			int sz = strlen(cmd);
-			string cmmd;
-			cmmd.assign(cmd, sz);
-
-			if (strcmp(command, "mode") == 0) {
-				command = strtok(0, " ");
-				if (strcmp(command, "A") == 0) {
-					mode = "A";
-					cout << "You are now in mode: administrator\n";
-				}
-				else if (strcmp(command, "B") == 0) {
-					cout << "You are now in mode: user\n";
-				}
-				else
-					cout << "Invalid user type !\n";
-			}
-			else if (strcmp(command, "next") == 0) {
-				next_turret();
-			}
-			else if (strcmp(command, "mylist") == 0) {
-				list_mylist();
-			}
-			else if (strcmp(command, "save") == 0) {
-				save_mylist(cmd);
-			}
-			else if (strcmp(command, "list") == 0) {
-				if (strlen(cmd) != 4)
-					sort_list(cmd);
-				else
-					cout << "Not a valid command !\n";
-			}
-			else if (strcmp(command, "mylistLocation") == 0) {
-				path_mylist(cmmd);
-			}
-			else if (strcmp(command, "exit") == 0) {
-				ok = 0;
-			}
-			else printf("Not a valid command !\n");
+		catch (exception & exept) {
+			cout << "error:  -" << exept.what() << "\n";
 		}
 	}
 }

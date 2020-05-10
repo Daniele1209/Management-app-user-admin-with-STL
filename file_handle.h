@@ -34,7 +34,7 @@ public:
 		f_path = "";
 	};
 	watchman_HTML(string path) { f_path = path; };
-	void save_file(const vector<Turret>& t);
+	void save_file(const vector<Turret>& t) override;
 };
 
 class watchman_CSV : public watchman_repo
@@ -44,5 +44,5 @@ public:
 		f_path = ""; 
 	};
 	watchman_CSV(string path) { f_path = path; };
-	void save_file(const vector<Turret>& t);
+	void save_file(const vector<Turret>& t) override;
 };

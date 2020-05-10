@@ -41,10 +41,10 @@ Turret watchman_repo::find_turret(string location) {
 }
 
 void watchman_HTML::save_file(const vector<Turret>& t) {
-	if (f_path.size() == 0)
+	if (this->f_path.size() == 0)
 		throw repo_exception("File path for HTML not set !\n");
 	try {
-		ofstream of(f_path);
+		ofstream of(this->f_path);
 		of << "<!DOCTYPE html>" << "\n";
 		of << "<html>" << "\n";
 		of << "\t" << "<head>" << "\n";
@@ -59,7 +59,7 @@ void watchman_HTML::save_file(const vector<Turret>& t) {
 		of << "\t\t" << "<td>" << "Parts" << "</td>" << "\n";
 		of << "\t\t" << "<td>" << "Vision" << "</td>" << "\n";
 		of << "\t" << "</tr>" << "\n";
-		for (auto turret : turrets) {
+		for (auto turret : this->turrets) {
 			of << "\t" << "<tr>" << "\n";
 			of << "\t\t" << "<td>" << turret.get_location() << "</td>" << "\n";
 			of << "\t\t" << "<td>" << turret.get_size() << "</td>" << "\n";
