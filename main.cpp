@@ -9,7 +9,7 @@ using namespace std;
 int main()
 {
 	string option;
-	run_all_tests();
+	//run_all_tests();
 	
 	while (true) {
 		cout << "Choose the file format for watchman: \n";
